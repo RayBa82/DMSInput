@@ -1,0 +1,4 @@
+<resources>
+
+    <style name="Theme.DMSInput" parent="@style/Theme.Leanback" />
+</resources>
