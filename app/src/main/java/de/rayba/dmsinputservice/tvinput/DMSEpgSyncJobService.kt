@@ -30,7 +30,7 @@ class DMSEpgSyncJobService : EpgSyncJobService() {
     private fun getChannels(url: String): MutableList<Channel> {
         val channels = mutableListOf<Channel>()
         val request = Request.Builder()
-                .url("https://tv.baun.lan/api/$url")
+                .url("http://whs.baun.lan:8089/api/$url")
                 .build()
 
         val client = HTTPUtil.getHttpClient()
@@ -45,14 +45,14 @@ class DMSEpgSyncJobService : EpgSyncJobService() {
                             val internalProviderData = InternalProviderData()
                             internalProviderData.isRepeatable = true
                             internalProviderData.videoType = TvContractUtils.SOURCE_TYPE_HTTP_PROGRESSIVE
-                            internalProviderData.videoUrl = "http://tv.baun.lan/upnp/channelstream/$channelId.ts"
+                            internalProviderData.videoUrl = "http://whs.baun.lan:8089/upnp/channelstream/$channelId.ts"
                             internalProviderData.put("epgId", channel.epgID)
                             val builder = Channel.Builder()
                                     .setOriginalNetworkId(channelId)
                                     .setDisplayName(channel.name)
                                     .setDisplayNumber(channel.position.toString())
                                     .setInternalProviderData(internalProviderData)
-                                    .setChannelLogo("http://tv.baun.lan/" + channel.logoUrl)
+                                    .setChannelLogo("http://whs.baun.lan:8089/" + channel.logoUrl)
                                     .setPackageName(applicationContext.packageName)
                                     .setTransportStreamId(0)
                                     .setServiceId(0)
@@ -79,7 +79,7 @@ class DMSEpgSyncJobService : EpgSyncJobService() {
             val start: String = getFloatDate(Date(startMs))
             val end: String = getFloatDate(Date(endMs))
 
-            val url = "https://tv.baun.lan/api/epg.html".toHttpUrl().newBuilder()
+            val url = "http://whs.baun.lan:8089/api/epg.html".toHttpUrl().newBuilder()
                     .addQueryParameter("utf8", "1")
                     .addQueryParameter("lvl", "2")
                     .addQueryParameter("channel", epgId)
