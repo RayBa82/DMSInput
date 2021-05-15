@@ -17,7 +17,7 @@ class DMSSession(context: Context, inputId: String) : BaseTvInputService.Session
 
     override fun onTune(channelUri: Uri): Boolean {
         notifyVideoUnavailable(TvInputManager.VIDEO_UNAVAILABLE_REASON_TUNING)
-        releasePlayer()
+        player.stop()
         return super.onTune(channelUri)
     }
 

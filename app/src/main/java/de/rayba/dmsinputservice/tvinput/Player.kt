@@ -3,6 +3,7 @@ package de.rayba.dmsinputservice.tvinput
 import android.content.Context
 import android.media.PlaybackParams
 import android.view.Surface
+import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
@@ -16,9 +17,7 @@ import com.google.android.media.tv.companionlibrary.TvPlayer
 class Player(val context: Context) : TvPlayer {
 
     private val trackSelector = DefaultTrackSelector(context)
-    private var player = SimpleExoPlayer.Builder(context)
-            .setTrackSelector(trackSelector)
-            .build()
+    private var player = initPlayer()
 
     override fun seekTo(position: Long) {
         player.seekTo(position)
@@ -62,14 +61,11 @@ class Player(val context: Context) : TvPlayer {
 
     fun stop() {
         player.stop()
+        player.clearMediaItems()
     }
 
     fun release() {
         player.release()
-    }
-
-    fun getSelectedTrack(type: Int): Int {
-        return player.trackSelector(type)
     }
 
     fun preparePlayer(url: String) {
@@ -81,5 +77,11 @@ class Player(val context: Context) : TvPlayer {
         player.setMediaSource(mediaSource)
         player.prepare()
         player.play()
+    }
+
+    private fun initPlayer(): SimpleExoPlayer {
+        return SimpleExoPlayer.Builder(context)
+            .setTrackSelector(trackSelector)
+            .build()
     }
 }
