@@ -2,6 +2,7 @@ package de.rayba.dmsinputservice.tvinput
 
 import android.content.Context
 import android.media.PlaybackParams
+import android.util.Log
 import android.view.Surface
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.DefaultLoadControl
@@ -25,7 +26,8 @@ private const val DEFAULT_BUFFER_FOR_PLAYBACK_MS = 100
 
 class Player(val context: Context) : TvPlayer {
 
-    val trackParams =
+    private val TAG = Player::class.java.name
+    private val trackParams =
         DefaultTrackSelector.ParametersBuilder(context)
             .setPreferredAudioMimeTypes("audio/vnd.dts.hd", "audio/vnd.dts", "audio/ac3")
             .build()
@@ -41,34 +43,41 @@ class Player(val context: Context) : TvPlayer {
     private var player = initPlayer()
 
     override fun seekTo(position: Long) {
+        Log.i(TAG, "seekTo")
         player.seekTo(position)
     }
 
     override fun setPlaybackParams(params: PlaybackParams?) {
-        TODO("Not yet implemented")
+        Log.i(TAG, "setPlaybackParams")
     }
 
     override fun getCurrentPosition(): Long {
+        Log.i(TAG, "getCurrentPosition")
         return player.currentPosition
     }
 
     override fun getDuration(): Long {
+        Log.i(TAG, "getDuration")
         return player.duration
     }
 
     override fun setSurface(surface: Surface?) {
+        Log.i(TAG, "setSurface")
         player.setVideoSurface(surface)
     }
 
     override fun setVolume(volume: Float) {
+        Log.i(TAG, "setVolume")
         player.volume = volume
     }
 
     override fun pause() {
+        Log.i(TAG, "pause")
         player.pause()
     }
 
     override fun play() {
+        Log.i(TAG, "play")
         player.play()
     }
 
@@ -81,15 +90,18 @@ class Player(val context: Context) : TvPlayer {
     }
 
     fun stop() {
+        Log.i(TAG, "stop")
         player.stop()
         player.clearMediaItems()
     }
 
     fun release() {
+        Log.i(TAG, "release")
         player.release()
     }
 
     fun preparePlayer(url: String) {
+        Log.i(TAG, "preparePlayer")
         val extractorFactory = DefaultExtractorsFactory()
         extractorFactory.setTsExtractorFlags(DefaultTsPayloadReaderFactory.FLAG_DETECT_ACCESS_UNITS or DefaultTsPayloadReaderFactory.FLAG_ALLOW_NON_IDR_KEYFRAMES)
         extractorFactory.setTsExtractorMode(TsExtractor.MODE_MULTI_PMT)
@@ -104,6 +116,7 @@ class Player(val context: Context) : TvPlayer {
     }
 
     private fun initPlayer(): SimpleExoPlayer {
+        Log.i(TAG, "initPlayer")
         val analyticsCollector = AnalyticsCollector(Clock.DEFAULT)
         analyticsCollector.addListener(analyticsListener)
         val audioAttributes: AudioAttributes = AudioAttributes.Builder()
