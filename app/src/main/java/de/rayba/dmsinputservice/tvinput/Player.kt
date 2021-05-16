@@ -22,9 +22,9 @@ import com.google.android.exoplayer2.util.EventLogger
 import com.google.android.media.tv.companionlibrary.TvPlayer
 
 private const val DEFAULT_MAX_BUFFER_MS = 10000
-private const val DEFAULT_BUFFER_FOR_PLAYBACK_MS = 100
+private const val DEFAULT_BUFFER_FOR_PLAYBACK_MS = 1
 
-class Player(val context: Context) : TvPlayer {
+class Player(val context: Context, val listener: com.google.android.exoplayer2.Player.EventListener) : TvPlayer {
 
     private val TAG = Player::class.java.name
     private val trackParams =
@@ -123,12 +123,14 @@ class Player(val context: Context) : TvPlayer {
             .setUsage(C.USAGE_MEDIA)
             .setContentType(C.CONTENT_TYPE_MOVIE)
             .build()
-        return SimpleExoPlayer.Builder(context)
+        val player = SimpleExoPlayer.Builder(context)
             .setTrackSelector(trackSelector)
             .setLoadControl(loadControl)
             .setAnalyticsCollector(analyticsCollector)
             .setAudioAttributes(audioAttributes, true)
             .build()
+        player.addListener(listener)
+        return player
     }
 
 }

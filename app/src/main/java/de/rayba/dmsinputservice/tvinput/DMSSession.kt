@@ -2,18 +2,22 @@ package de.rayba.dmsinputservice.tvinput
 
 import android.content.Context
 import android.media.tv.TvInputManager
+import android.media.tv.TvTrackInfo
 import android.net.Uri
 import android.os.Build
 import android.util.Log
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.source.TrackGroupArray
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.media.tv.companionlibrary.BaseTvInputService
 import com.google.android.media.tv.companionlibrary.TvPlayer
 import com.google.android.media.tv.companionlibrary.model.Program
 import com.google.android.media.tv.companionlibrary.model.RecordedProgram
 
-class DMSSession(context: Context, inputId: String) : BaseTvInputService.Session(context, inputId) {
+class DMSSession(context: Context, inputId: String) : BaseTvInputService.Session(context, inputId), com.google.android.exoplayer2.Player.EventListener {
 
     private val TAG = DMSSession::class.java.name
-    private val player = Player(context)
+    private val player = Player(context, this)
 
     override fun onTune(channelUri: Uri): Boolean {
         Log.i(TAG, "onTune")
@@ -40,8 +44,6 @@ class DMSSession(context: Context, inputId: String) : BaseTvInputService.Session
             notifyTimeShiftStatusChanged(TvInputManager.TIME_SHIFT_STATUS_AVAILABLE)
         }
         player.preparePlayer(program.internalProviderData.videoUrl)
-
-        notifyVideoAvailable()
         return true
     }
 
@@ -58,9 +60,20 @@ class DMSSession(context: Context, inputId: String) : BaseTvInputService.Session
 
 
     private fun releasePlayer() {
-        player.setSurface(null)
         player.stop()
         player.release()
     }
+
+    override fun onPlaybackStateChanged(state: Int) {
+        Log.i(TAG, "onPlaybackStateChanged")
+        if(state == ExoPlayer.STATE_READY) {
+            player.play()
+            notifyVideoAvailable()
+        }
+    }
+
+    override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray ) {
+    }
+
 
 }
