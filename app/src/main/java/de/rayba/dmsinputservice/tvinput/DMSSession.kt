@@ -16,12 +16,14 @@ class DMSSession(context: Context, inputId: String) : BaseTvInputService.Session
     private val player = Player(context)
 
     override fun onTune(channelUri: Uri): Boolean {
+        Log.i(TAG, "onTune")
         notifyVideoUnavailable(TvInputManager.VIDEO_UNAVAILABLE_REASON_TUNING)
         player.stop()
         return super.onTune(channelUri)
     }
 
     override fun onSetCaptionEnabled(enabled: Boolean) {
+        Log.i(TAG, "onSetCaptionEnabled")
     }
 
     override fun getTvPlayer(): TvPlayer {
@@ -29,6 +31,7 @@ class DMSSession(context: Context, inputId: String) : BaseTvInputService.Session
     }
 
     override fun onPlayProgram(program: Program?, startPosMs: Long): Boolean {
+        Log.i(TAG, "onPlayProgram")
         if (program == null) {
             notifyVideoUnavailable(TvInputManager.VIDEO_UNAVAILABLE_REASON_TUNING)
             return false
@@ -43,11 +46,12 @@ class DMSSession(context: Context, inputId: String) : BaseTvInputService.Session
     }
 
     override fun onPlayRecordedProgram(recordedProgram: RecordedProgram?): Boolean {
-        Log.i(TAG, "not implemented")
+        Log.i(TAG, "onPlayRecordedProgram")
         return false
     }
 
     override fun onRelease() {
+        Log.i(TAG, "onRelease")
         super.onRelease()
         releasePlayer()
     }
